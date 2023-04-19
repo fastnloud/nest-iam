@@ -1,0 +1,53 @@
+{
+  "name": "@fastnloud/nest-iam",
+  "version": "0.0.0",
+  "description": "Identity access management module for Nest that provides a simple customizable authentication service interface.",
+  "homepage": "https://github.com/fastnloud/nest-iam#readme",
+  "main": "dist/index.js",
+  "author": "jaap",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "lint:ts": "prettier --check \"src/**/*.ts\"",
+    "lint:ts:fix": "prettier --write \"src/**/*.ts\"",
+    "prebuild": "rimraf dist",
+    "preversion": "npm run build",
+    "hash-password": "node dist/prompts/hash-password.prompt.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastnloud/nest-iam.git"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "class-validator": "^0.14.0",
+    "joi": "^17.9.0",
+    "prompts": "^2.4.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.0.0",
+    "@nestjs/core": "^9.0.0",
+    "@nestjs/cqrs": "^9.0.0",
+    "@nestjs/jwt": "^10.0.0",
+    "@nestjs/swagger": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^18.15.11",
+    "@types/prompts": "^2.4.4",
+    "prettier": "^2.8.7",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "rimraf": "^4.4.1",
+    "typescript": "^5.0.2"
+  },
+  "keywords": [
+    "nest",
+    "iam",
+    "authentication",
+    "jwt"
+  ],
+  "files": [
+    "dist/**/*"
+  ]
+}
