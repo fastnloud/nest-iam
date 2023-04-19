@@ -48,6 +48,6 @@
     "jwt"
   ],
   "files": [
-    "dist/**/*"
+    "dist/**/*.{js,ts}"
   ]
 }
