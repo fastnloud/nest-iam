@@ -11,8 +11,10 @@
     "lint:ts": "prettier --check \"src/**/*.ts\"",
     "lint:ts:fix": "prettier --write \"src/**/*.ts\"",
     "prebuild": "rimraf dist",
-    "preversion": "npm run build",
-    "hash-password": "node dist/prompts/hash-password.prompt.js"
+    "preversion": "npm run build"
+  },
+  "bin": {
+    "hash-password": "./dist/prompts/hash-password.prompt.js"
   },
   "repository": {
     "type": "git",
