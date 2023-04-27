@@ -1,7 +1,8 @@
+#!/usr/bin/env node
 import { PromptObject, prompt } from 'prompts';
 import { BcryptHasher } from '../hashers/bcrypt.hasher';
 
-export default (async () => {
+(async () => {
   const questions: PromptObject[] = [
     {
       type: 'password',
@@ -11,7 +12,7 @@ export default (async () => {
   ];
 
   await prompt(questions, {
-    onSubmit: async (prompt: string, answer: string) =>
+    onSubmit: async (_: string, answer: string) =>
       console.log(await new BcryptHasher().hash(answer)),
   });
 })();

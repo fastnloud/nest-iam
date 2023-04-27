@@ -146,6 +146,8 @@ A decoded JWT payload may look something like this:
 }
 ```
 
+Run `npx hash-password` to hash passwords via the CLI.
+
 ## License
 
 nest-iam is [MIT licensed](LICENSE).
