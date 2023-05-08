@@ -22,8 +22,6 @@ export class AuthService implements IAuthService {
   public async checkToken(id: string, type: string): Promise<IToken> {}
   // fetch and check user or throw exception
   public async checkUser(username: string): Promise<IUser> {}
-  // handle logout
-  public async logout(userId: string): Promise<void> {}
   // fetch user or throw exception
   public async getUser(id: string): Promise<IUser> {}
   // remove token

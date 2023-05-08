@@ -13,6 +13,7 @@ import { NoneGuard } from './guards/none.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { BcryptHasher } from './hashers/bcrypt.hasher';
 import { ConfigurableModuleClass } from './iam.module-definition';
+import { LoginProcessor } from './processors/login.processor';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ConfigurableModuleClass } from './iam.module-definition';
     AccessTokenGuard,
     AuthGuard,
     BcryptHasher,
+    LoginProcessor,
     NoneGuard,
     RefreshTokenGenerator,
     RolesGuard,
@@ -47,7 +49,7 @@ import { ConfigurableModuleClass } from './iam.module-definition';
       useClass: RolesGuard,
     },
   ],
-  exports: [BcryptHasher],
+  exports: [BcryptHasher, LoginProcessor],
   controllers: [AuthController],
 })
 export class IamModule extends ConfigurableModuleClass {}
