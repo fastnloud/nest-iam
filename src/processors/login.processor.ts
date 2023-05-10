@@ -6,9 +6,9 @@ import { AccessTokenGenerator } from '../generators/access-token.generator';
 import { RefreshTokenGenerator } from '../generators/refresh-token.generator';
 import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
 import { IModuleOptions } from '../interfaces/module-options.interface';
+import { Response } from 'express';
 import { IUser } from '../interfaces/user.interface';
 import { TokenType } from '../enums/token-type.enum';
-import { IAM_REFRESH_TOKENS_PATH } from '../constants/iam.constants';
 import { ILogin } from '../interfaces/login.interface';
 
 @Injectable()
@@ -22,7 +22,10 @@ export class LoginProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(user: IUser, response: any = null): Promise<ILogin> {
+  public async process(
+    user: IUser,
+    response: Response = null,
+  ): Promise<ILogin> {
     const accessToken = await this.accessTokenGenerator.generate(user);
     const refreshToken = await this.refreshTokenGenerator.generate(
       randomUUID(),
@@ -56,7 +59,7 @@ export class LoginProcessor {
       httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,
       expires: refreshToken.expiresAt,
-      path: IAM_REFRESH_TOKENS_PATH,
+      path: `${this.moduleOptions.routePathPrefix || ''}/auth`,
     });
 
     return login;
