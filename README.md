@@ -45,7 +45,10 @@ import { AuthService } from './services/auth.service';
     IamModule.registerAsync({
       imports: [UserModule],
       useFactory: (authService: IAuthService) => {
-        return { authService };
+        return {
+          authService,
+          routePathPrefix: '/api', // required when using a route prefix
+        };
       },
       inject: [AuthService],
     }),

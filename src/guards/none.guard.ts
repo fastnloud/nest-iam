@@ -10,7 +10,7 @@ export class NoneGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request: any = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest();
     const accessToken: string | undefined =
       request.cookies[TokenType.AccessToken];
 

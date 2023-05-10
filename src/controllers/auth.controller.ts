@@ -14,11 +14,6 @@ import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOkResponse } from '@nestjs/swagger';
 import iamConfig from '../configs/iam.config';
-import {
-  IAM_LOGIN_PATH,
-  IAM_LOGOUT_PATH,
-  IAM_REFRESH_TOKENS_PATH,
-} from '../constants/iam.constants';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
 import { AuthType } from '../enums/auth-type.enum';
@@ -34,6 +29,7 @@ import { LoggedOutEvent } from '../events/logged-out.event';
 import { LoginResponseDto } from '../dtos/login-response.dto';
 import { LoginProcessor } from '../processors/login.processor';
 import { LoginRequestDto } from '../dtos/login-request.dto';
+import { Request, Response } from 'express';
 
 @Controller()
 export class AuthController {
@@ -51,10 +47,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: LoginResponseDto })
   @Auth(AuthType.None)
-  @Post(IAM_LOGIN_PATH)
+  @Post('/auth/login')
   async login(
     @Body() request: LoginRequestDto,
-    @Res({ passthrough: true }) response: any,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<LoginResponseDto> {
     try {
       const user = await this.moduleOptions.authService.checkUser(
@@ -81,10 +77,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: LoginResponseDto })
   @Auth(AuthType.None)
-  @Get(IAM_REFRESH_TOKENS_PATH)
+  @Get('/auth/refresh_tokens')
   async refreshTokens(
-    @Req() request: any,
-    @Res({ passthrough: true }) response: any,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<LoginResponseDto> {
     try {
       const refreshTokenJwtPayload: IRefreshTokenJwtPayload =
@@ -119,12 +115,23 @@ export class AuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Auth(AuthType.None)
-  @Get(IAM_LOGOUT_PATH)
+  @Get('/auth/logout')
   async logout(
-    @Req() request: any,
+    @Req() request: Request,
     @ActiveUser() activeUser: IActiveUser,
-    @Res({ passthrough: true }) response: any,
+    @Res({ passthrough: true }) response: Response,
   ) {
+    try {
+      const refreshTokenJwtPayload: IRefreshTokenJwtPayload =
+        await this.jwtService.verifyAsync(
+          request.cookies[TokenType.RefreshToken],
+        );
+
+      await this.moduleOptions.authService.removeToken(
+        refreshTokenJwtPayload.id,
+      );
+    } catch {}
+
     response.clearCookie(TokenType.AccessToken);
 
     if (!activeUser) {
