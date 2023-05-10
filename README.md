@@ -47,7 +47,7 @@ import { AuthService } from './services/auth.service';
       useFactory: (authService: IAuthService) => {
         return {
           authService,
-          routePathPrefix: '/api', // required when using a route prefix
+          routePathPrefix: '/api', // required when using a prefix
         };
       },
       inject: [AuthService],
