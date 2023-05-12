@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
@@ -46,6 +46,7 @@ export class AuthController {
   ) {}
 
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ operationId: 'authLogin' })
   @ApiOkResponse({ type: LoginResponseDto })
   @Auth(AuthType.None)
   @Post('/auth/login')
@@ -76,6 +77,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ operationId: 'authRefreshTokens' })
   @ApiOkResponse({ type: LoginResponseDto })
   @Auth(AuthType.None)
   @Get('/auth/refresh_tokens')
@@ -115,6 +117,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ operationId: 'authLogout' })
   @Auth(AuthType.None)
   @Get('/auth/logout')
   async logout(
