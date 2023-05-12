@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
@@ -32,6 +32,7 @@ import { LoginRequestDto } from '../dtos/login-request.dto';
 import { Request, Response } from 'express';
 
 @Controller()
+@ApiTags('Auth')
 export class AuthController {
   constructor(
     private readonly eventBus: EventBus,
