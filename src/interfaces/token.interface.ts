@@ -1,5 +1,7 @@
 export interface IToken {
-  id: string;
-  type: string;
-  expiresAt: Date;
+  getId(): string;
+  getRequestId(): string | undefined;
+  getUserId(): string;
+  getType(): string;
+  getExpiresAt(): Date;
 }

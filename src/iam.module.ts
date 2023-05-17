@@ -14,6 +14,8 @@ import { RolesGuard } from './guards/roles.guard';
 import { BcryptHasher } from './hashers/bcrypt.hasher';
 import { ConfigurableModuleClass } from './iam.module-definition';
 import { LoginProcessor } from './processors/login.processor';
+import { PasswordlessLoginTokenGenerator } from './generators/passwordless-login-token.generator';
+import { PasswordlessLoginRequestProcessor } from './processors/passwordless-login-request.processor';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { LoginProcessor } from './processors/login.processor';
     BcryptHasher,
     LoginProcessor,
     NoneGuard,
+    PasswordlessLoginRequestProcessor,
+    PasswordlessLoginTokenGenerator,
     RefreshTokenGenerator,
     RolesGuard,
     {

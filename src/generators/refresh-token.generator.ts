@@ -5,6 +5,7 @@ import iamConfig from '../configs/iam.config';
 import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload.interface';
 import { IRefreshToken } from '../interfaces/refresh-token.interface';
 import { IUser } from '../interfaces/user.interface';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class RefreshTokenGenerator {
@@ -14,7 +15,8 @@ export class RefreshTokenGenerator {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  async generate(id: string, user: IUser): Promise<IRefreshToken> {
+  async generate(user: IUser): Promise<IRefreshToken> {
+    const id = randomUUID();
     const ttl = this.config.jwt.refreshTokenTtl;
 
     const expiresAt = new Date();

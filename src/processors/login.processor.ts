@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { randomUUID } from 'crypto';
 import iamConfig from '../configs/iam.config';
 import { AccessTokenGenerator } from '../generators/access-token.generator';
 import { RefreshTokenGenerator } from '../generators/refresh-token.generator';
@@ -10,6 +9,7 @@ import { Response } from 'express';
 import { IUser } from '../interfaces/user.interface';
 import { TokenType } from '../enums/token-type.enum';
 import { ILogin } from '../interfaces/login.interface';
+import { TokenModel } from '../models/token.model';
 
 @Injectable()
 export class LoginProcessor {
@@ -22,26 +22,23 @@ export class LoginProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(
-    user: IUser,
-    response: Response = null,
-  ): Promise<ILogin> {
+  public async process(user: IUser, response?: Response): Promise<ILogin> {
     const accessToken = await this.accessTokenGenerator.generate(user);
-    const refreshToken = await this.refreshTokenGenerator.generate(
-      randomUUID(),
-      user,
-    );
+    const refreshToken = await this.refreshTokenGenerator.generate(user);
 
     const login = {
       accessToken: accessToken.jwt,
       refreshToken: refreshToken.jwt,
     };
 
-    await this.moduleOptions.authService.saveToken(user.getId(), {
-      id: refreshToken.id,
-      type: TokenType.RefreshToken,
-      expiresAt: refreshToken.expiresAt,
-    });
+    await this.moduleOptions.authService.saveToken(
+      new TokenModel(
+        refreshToken.id,
+        TokenType.RefreshToken,
+        user.getId(),
+        refreshToken.expiresAt,
+      ),
+    );
 
     if (!response) {
       return login;

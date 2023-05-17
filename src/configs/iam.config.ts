@@ -3,6 +3,12 @@ import * as Joi from 'joi';
 
 export default registerAs('iam', () => {
   const config = {
+    auth: {
+      methods: (process.env.IAM_AUTH_METHODS || '').split(','),
+      passwordless: {
+        tokenTtl: process.env.IAM_AUTH_PASSWORDLESS_TOKEN_TTL,
+      },
+    },
     cookie: {
       httpOnly: process.env.IAM_COOKIE_HTTP_ONLY,
       sameSite: process.env.IAM_COOKIE_SAME_SITE,
@@ -18,6 +24,23 @@ export default registerAs('iam', () => {
   };
 
   const validationResult = Joi.object({
+    auth: Joi.object({
+      methods: Joi.array()
+        .items(Joi.string().valid('basic', 'passwordless'))
+        .min(1)
+        .required()
+        .messages({
+          '*': 'Environment variable IAM_AUTH_METHODS is required (e.g. basic,passwordless (comma separated))',
+        }),
+      passwordless: Joi.any().when('methods', {
+        is: Joi.array().items().has('passwordless'),
+        then: Joi.object({
+          tokenTtl: Joi.number().positive().required().messages({
+            '*': 'Environment variable IAM_AUTH_PASSWORDLESS_TOKEN_TTL is required (e.g. 300 for 5 minutes)',
+          }),
+        }),
+      }),
+    }),
     cookie: Joi.object({
       httpOnly: Joi.valid('1', '0').required().messages({
         '*': 'Environment variable IAM_COOKIE_HTTP_ONLY is required (1 or 0)',
@@ -53,6 +76,15 @@ export default registerAs('iam', () => {
   }
 
   return {
+    auth: {
+      ...config.auth,
+      passwordless: {
+        ...config.auth.passwordless,
+        tokenTtl: config.auth.passwordless.tokenTtl
+          ? parseInt(config.auth.passwordless.tokenTtl, 10)
+          : undefined,
+      },
+    },
     jwt: {
       ...config.jwt,
       accessTokenTtl: parseInt(config.jwt.accessTokenTtl, 10),
