@@ -8,8 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "lint:ts": "prettier --check \"src/**/*.ts\"",
-    "lint:ts:fix": "prettier --write \"src/**/*.ts\"",
+    "prettier": "prettier --check \"src/**/*.ts\"",
+    "prettier:fix": "prettier --write \"src/**/*.ts\"",
     "prebuild": "rimraf dist",
     "preversion": "npm run build"
   },
