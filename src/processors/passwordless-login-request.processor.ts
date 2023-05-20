@@ -19,16 +19,12 @@ export class PasswordlessLoginRequestProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(user: IUser, response?: Response): Promise<void> {
+  public async process(user: IUser, response: Response): Promise<void> {
     const requestId = randomUUID();
     const passwordlessLoginToken =
       await this.passwordlessLoginTokenGenerator.generate(user, requestId);
 
     await this.moduleOptions.authService.saveToken(passwordlessLoginToken);
-
-    if (!response) {
-      return;
-    }
 
     response.cookie(TokenType.PasswordlessLoginToken, requestId, {
       secure: this.config.cookie.secure,

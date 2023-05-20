@@ -39,6 +39,7 @@ import iamConfig from '../configs/iam.config';
 import { ConfigType } from '@nestjs/config';
 import { PasswordlessLoginRequestDto } from '../dtos/passwordless-login-request.dto';
 import { PasswordlessLoginRequestProcessor } from '../processors/passwordless-login-request.processor';
+import { LogoutProcessor } from 'src/processors/logout.processor';
 
 @Controller()
 @ApiTags('Auth')
@@ -47,6 +48,7 @@ export class AuthController {
     private readonly eventBus: EventBus,
     private readonly hasher: BcryptHasher,
     private readonly loginProcessor: LoginProcessor,
+    private readonly logoutProcessor: LogoutProcessor,
     private readonly passwordlessLoginRequestProcessor: PasswordlessLoginRequestProcessor,
     private readonly jwtService: JwtService,
     @Inject(MODULE_OPTIONS_TOKEN)
@@ -199,21 +201,7 @@ export class AuthController {
     @ActiveUser() activeUser: IActiveUser,
     @Res({ passthrough: true }) response: Response,
   ) {
-    try {
-      const refreshTokenJwtPayload: IRefreshTokenJwtPayload =
-        await this.jwtService.verifyAsync(
-          request.cookies[TokenType.RefreshToken],
-        );
-
-      await this.moduleOptions.authService.removeToken(
-        refreshTokenJwtPayload.id,
-      );
-    } catch {}
-
-    response.clearCookie(TokenType.AccessToken);
-    response.clearCookie(TokenType.RefreshToken, {
-      path: `${this.moduleOptions.routePathPrefix || ''}/auth`,
-    });
+    this.logoutProcessor.process(request, response);
 
     if (!activeUser) {
       return;
