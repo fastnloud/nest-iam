@@ -22,7 +22,7 @@ export class LoginProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(user: IUser, response?: Response): Promise<ILogin> {
+  public async process(user: IUser, response: Response): Promise<ILogin> {
     const accessToken = await this.accessTokenGenerator.generate(user);
     const refreshToken = await this.refreshTokenGenerator.generate(user);
 
@@ -39,10 +39,6 @@ export class LoginProcessor {
         refreshToken.expiresAt,
       ),
     );
-
-    if (!response) {
-      return login;
-    }
 
     response.cookie(TokenType.AccessToken, accessToken.jwt, {
       secure: this.config.cookie.secure,
