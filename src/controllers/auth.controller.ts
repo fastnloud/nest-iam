@@ -37,9 +37,9 @@ import { LoginRequestDto } from '../dtos/login-request.dto';
 import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { ConfigType } from '@nestjs/config';
-import { PasswordlessLoginRequestDto } from '../dtos/passwordless-login-request.dto';
-import { PasswordlessLoginRequestProcessor } from '../processors/passwordless-login-request.processor';
 import { LogoutProcessor } from 'src/processors/logout.processor';
+import { PasswordlessLoginRequestRequestDto } from 'src/dtos/passwordless-login-request-request.dto';
+import { PasswordlessLoginRequestProcessor } from 'src/processors/passwordless-login-request.processor';
 
 @Controller()
 @ApiTags('Auth')
@@ -136,7 +136,7 @@ export class AuthController {
   @Auth(AuthType.None)
   @Post('/auth/passwordless_login')
   async passwordlessLoginRequest(
-    @Body() request: PasswordlessLoginRequestDto,
+    @Body() request: PasswordlessLoginRequestRequestDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<void> {
     if (!this.config.auth.methods.includes('passwordless')) {
