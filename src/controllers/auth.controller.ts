@@ -37,9 +37,9 @@ import { LoginRequestDto } from '../dtos/login-request.dto';
 import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { ConfigType } from '@nestjs/config';
-import { LogoutProcessor } from 'src/processors/logout.processor';
-import { PasswordlessLoginRequestRequestDto } from 'src/dtos/passwordless-login-request-request.dto';
-import { PasswordlessLoginRequestProcessor } from 'src/processors/passwordless-login-request.processor';
+import { LogoutProcessor } from '../processors/logout.processor';
+import { PasswordlessLoginRequestRequestDto } from '../dtos/passwordless-login-request-request.dto';
+import { PasswordlessLoginRequestProcessor } from '../processors/passwordless-login-request.processor';
 
 @Controller()
 @ApiTags('Auth')

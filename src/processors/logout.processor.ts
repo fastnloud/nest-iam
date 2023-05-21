@@ -3,7 +3,7 @@ import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
 import { IModuleOptions } from '../interfaces/module-options.interface';
 import { Request, Response } from 'express';
 import { TokenType } from '../enums/token-type.enum';
-import { IRefreshTokenJwtPayload } from 'src/interfaces/refresh-token-jwt-payload.interface';
+import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
