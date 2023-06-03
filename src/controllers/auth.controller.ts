@@ -40,7 +40,6 @@ import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload
 import { LoginProcessor } from '../processors/login.processor';
 import { LogoutProcessor } from '../processors/logout.processor';
 import { PasswordlessLoginRequestProcessor } from '../processors/passwordless-login-request.processor';
-import { ApiNoContentResponse } from '@nestjs/swagger';
 
 @Controller()
 @ApiTags('Auth')
