@@ -13,7 +13,12 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { EventBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
@@ -120,6 +125,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ operationId: 'authLogout' })
+  @ApiNoContentResponse()
   @Auth(AuthType.None)
   @Get('/auth/logout')
   async logout(
