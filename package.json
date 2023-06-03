@@ -1,6 +1,6 @@
 {
   "name": "@fastnloud/nest-iam",
-  "version": "1.2.3",
+  "version": "1.2.6",
   "description": "Identity access management module for Nest that provides a simple customizable authentication service interface.",
   "homepage": "https://github.com/fastnloud/nest-iam#readme",
   "main": "dist/index.js",
@@ -11,6 +11,7 @@
     "prettier": "prettier --check \"src/**/*.ts\"",
     "prettier:fix": "prettier --write \"src/**/*.ts\"",
     "prebuild": "rimraf dist",
+    "prepublishOnly": "npm run build",
     "preversion": "npm run build"
   },
   "bin": {
