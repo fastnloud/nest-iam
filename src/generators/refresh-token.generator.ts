@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
 import iamConfig from '../configs/iam.config';
 import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload.interface';
 import { IRefreshToken } from '../interfaces/refresh-token.interface';
 import { IUser } from '../interfaces/user.interface';
-import { randomUUID } from 'crypto';
 
 @Injectable()
 export class RefreshTokenGenerator {

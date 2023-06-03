@@ -12,6 +12,8 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { EventBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import {
   ApiNoContentResponse,
@@ -19,26 +21,24 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Request, Response } from 'express';
+import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
+import { LoginRequestDto } from '../dtos/login-request.dto';
+import { LoginResponseDto } from '../dtos/login-response.dto';
+import { PasswordlessLoginRequestRequestDto } from '../dtos/passwordless-login-request-request.dto';
 import { AuthType } from '../enums/auth-type.enum';
 import { TokenType } from '../enums/token-type.enum';
+import { LoggedInEvent } from '../events/logged-in.event';
+import { LoggedOutEvent } from '../events/logged-out.event';
 import { BcryptHasher } from '../hashers/bcrypt.hasher';
 import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
 import { IActiveUser } from '../interfaces/active-user.interface';
 import { IModuleOptions } from '../interfaces/module-options.interface';
 import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload.interface';
-import { EventBus } from '@nestjs/cqrs';
-import { LoggedInEvent } from '../events/logged-in.event';
-import { LoggedOutEvent } from '../events/logged-out.event';
-import { LoginResponseDto } from '../dtos/login-response.dto';
 import { LoginProcessor } from '../processors/login.processor';
-import { LoginRequestDto } from '../dtos/login-request.dto';
-import { Request, Response } from 'express';
-import iamConfig from '../configs/iam.config';
-import { ConfigType } from '@nestjs/config';
 import { LogoutProcessor } from '../processors/logout.processor';
-import { PasswordlessLoginRequestRequestDto } from '../dtos/passwordless-login-request-request.dto';
 import { PasswordlessLoginRequestProcessor } from '../processors/passwordless-login-request.processor';
 
 @Controller()

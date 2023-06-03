@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import iamConfig from '../configs/iam.config';
-import { IUser } from '../interfaces/user.interface';
-import { IToken } from '../interfaces/token.interface';
 import { randomUUID } from 'crypto';
+import iamConfig from '../configs/iam.config';
 import { TokenType } from '../enums/token-type.enum';
+import { IToken } from '../interfaces/token.interface';
+import { IUser } from '../interfaces/user.interface';
 import { TokenModel } from '../models/token.model';
 
 @Injectable()

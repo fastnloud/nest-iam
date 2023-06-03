@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import iamConfig from '../configs/iam.config';
-import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
-import { IModuleOptions } from '../interfaces/module-options.interface';
+import { randomUUID } from 'crypto';
 import { Response } from 'express';
-import { IUser } from '../interfaces/user.interface';
+import iamConfig from '../configs/iam.config';
 import { TokenType } from '../enums/token-type.enum';
 import { PasswordlessLoginTokenGenerator } from '../generators/passwordless-login-token.generator';
-import { randomUUID } from 'crypto';
+import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
+import { IModuleOptions } from '../interfaces/module-options.interface';
+import { IUser } from '../interfaces/user.interface';
 
 @Injectable()
 export class PasswordlessLoginRequestProcessor {
