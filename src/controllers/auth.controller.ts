@@ -11,25 +11,26 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { EventBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
+import { LoginRequestDto } from '../dtos/login-request.dto';
+import { LoginResponseDto } from '../dtos/login-response.dto';
 import { AuthType } from '../enums/auth-type.enum';
 import { TokenType } from '../enums/token-type.enum';
+import { LoggedInEvent } from '../events/logged-in.event';
+import { LoggedOutEvent } from '../events/logged-out.event';
 import { BcryptHasher } from '../hashers/bcrypt.hasher';
 import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
 import { IActiveUser } from '../interfaces/active-user.interface';
 import { IModuleOptions } from '../interfaces/module-options.interface';
 import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload.interface';
-import { EventBus } from '@nestjs/cqrs';
-import { LoggedInEvent } from '../events/logged-in.event';
-import { LoggedOutEvent } from '../events/logged-out.event';
-import { LoginResponseDto } from '../dtos/login-response.dto';
 import { LoginProcessor } from '../processors/login.processor';
-import { LoginRequestDto } from '../dtos/login-request.dto';
-import { Request, Response } from 'express';
+import { LogoutProcessor } from '../processors/logout.processor';
 
 @Controller()
 @ApiTags('Auth')
@@ -38,6 +39,7 @@ export class AuthController {
     private readonly eventBus: EventBus,
     private readonly hasher: BcryptHasher,
     private readonly loginProcessor: LoginProcessor,
+    private readonly logoutProcessor: LogoutProcessor,
     private readonly jwtService: JwtService,
     @Inject(MODULE_OPTIONS_TOKEN)
     private readonly moduleOptions: IModuleOptions,
@@ -122,21 +124,10 @@ export class AuthController {
   @Get('/auth/logout')
   async logout(
     @Req() request: Request,
-    @ActiveUser() activeUser: IActiveUser,
     @Res({ passthrough: true }) response: Response,
+    @ActiveUser() activeUser: IActiveUser,
   ) {
-    try {
-      const refreshTokenJwtPayload: IRefreshTokenJwtPayload =
-        await this.jwtService.verifyAsync(
-          request.cookies[TokenType.RefreshToken],
-        );
-
-      await this.moduleOptions.authService.removeToken(
-        refreshTokenJwtPayload.id,
-      );
-    } catch {}
-
-    response.clearCookie(TokenType.AccessToken);
+    await this.logoutProcessor.process(request, response);
 
     if (!activeUser) {
       return;

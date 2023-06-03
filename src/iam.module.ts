@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CqrsModule } from '@nestjs/cqrs';
 import { APP_GUARD } from '@nestjs/core';
+import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
 import iamConfig from './configs/iam.config';
 import { AuthController } from './controllers/auth.controller';
@@ -14,6 +14,7 @@ import { RolesGuard } from './guards/roles.guard';
 import { BcryptHasher } from './hashers/bcrypt.hasher';
 import { ConfigurableModuleClass } from './iam.module-definition';
 import { LoginProcessor } from './processors/login.processor';
+import { LogoutProcessor } from './processors/logout.processor';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { LoginProcessor } from './processors/login.processor';
     AuthGuard,
     BcryptHasher,
     LoginProcessor,
+    LogoutProcessor,
     NoneGuard,
     RefreshTokenGenerator,
     RolesGuard,
