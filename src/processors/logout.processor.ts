@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
+import { IRefreshTokenJwtPayload } from 'src/interfaces/refresh-token-jwt-payload.interface';
 import { TokenType } from '../enums/token-type.enum';
 import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
 import { IModuleOptions } from '../interfaces/module-options.interface';
-import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload.interface';
 
 @Injectable()
 export class LogoutProcessor {

@@ -15,12 +15,7 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { EventBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
-import {
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
@@ -40,6 +35,7 @@ import { IRefreshTokenJwtPayload } from '../interfaces/refresh-token-jwt-payload
 import { LoginProcessor } from '../processors/login.processor';
 import { LogoutProcessor } from '../processors/logout.processor';
 import { PasswordlessLoginRequestProcessor } from '../processors/passwordless-login-request.processor';
+import { ApiNoContentResponse } from '@nestjs/swagger';
 
 @Controller()
 @ApiTags('Auth')
@@ -198,10 +194,10 @@ export class AuthController {
   @Get('/auth/logout')
   async logout(
     @Req() request: Request,
-    @ActiveUser() activeUser: IActiveUser,
     @Res({ passthrough: true }) response: Response,
+    @ActiveUser() activeUser: IActiveUser,
   ) {
-    this.logoutProcessor.process(request, response);
+    await this.logoutProcessor.process(request, response);
 
     if (!activeUser) {
       return;
