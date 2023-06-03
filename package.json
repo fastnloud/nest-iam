@@ -11,6 +11,7 @@
     "lint:ts": "prettier --check \"src/**/*.ts\"",
     "lint:ts:fix": "prettier --write \"src/**/*.ts\"",
     "prebuild": "rimraf dist",
+    "prepublish": "npm run build",
     "preversion": "npm run build"
   },
   "bin": {
