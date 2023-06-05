@@ -99,8 +99,8 @@ export class AuthController {
   @Get('/auth/passwordless_login/:id')
   async passwordlessLogin(
     @Param('id') tokenId: string,
-    @Res({ passthrough: true }) response: Response,
     @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<LoginResponseDto> {
     if (!this.config.auth.methods.includes('passwordless')) {
       throw new NotFoundException();
