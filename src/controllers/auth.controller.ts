@@ -106,11 +106,17 @@ export class AuthController {
       throw new NotFoundException();
     }
 
+    const requestId = request.cookies[TokenType.PasswordlessLoginToken];
+
+    if (!requestId) {
+      throw new UnauthorizedException();
+    }
+
     try {
       const token = await this.moduleOptions.authService.checkToken(
         tokenId,
         TokenType.PasswordlessLoginToken,
-        request.cookies[TokenType.PasswordlessLoginToken],
+        requestId,
       );
       const user = await this.moduleOptions.authService.getUser(
         token.getUserId(),
