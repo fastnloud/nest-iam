@@ -47,7 +47,6 @@ import { AuthService } from './services/auth.service';
       useFactory: (authService: IAuthService) => {
         return {
           authService,
-          routePathPrefix: '/api', // required when using a prefix
         };
       },
       inject: [AuthService],
@@ -61,6 +60,8 @@ export class UserModule {}
 A sample `.env` file looks something like this:
 
 ```
+IAM_AUTH_METHODS=basic,passwordless
+IAM_AUTH_PASSWORDLESS_TOKEN_TTL=300
 IAM_COOKIE_HTTP_ONLY=1
 IAM_COOKIE_SAME_SITE=lax
 IAM_COOKIE_SECURE=0
@@ -69,6 +70,7 @@ IAM_JWT_REFRESH_TOKEN_TTL=86400
 IAM_JWT_SECRET=superSecretString
 IAM_JWT_TOKEN_AUDIENCE=localhost
 IAM_JWT_TOKEN_ISSUER=localhost
+IAM_ROUTE_PATH_PREFIX=/api
 ```
 
 ## Usage

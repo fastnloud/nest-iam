@@ -52,7 +52,7 @@ export class LoginProcessor {
       httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,
       expires: refreshToken.expiresAt,
-      path: `${this.moduleOptions.routePathPrefix || ''}/auth`,
+      path: `${this.config.routePathPrefix}/auth`,
     });
 
     return login;
