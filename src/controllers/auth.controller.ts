@@ -92,7 +92,7 @@ export class AuthController {
     }
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'authPasswordlessLogin' })
   @ApiOkResponse({ type: LoginResponseDto })
   @Auth(AuthType.None)
