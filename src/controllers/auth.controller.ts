@@ -71,7 +71,7 @@ export class AuthController {
     }
 
     try {
-      const user = await this.moduleOptions.authService.checkUser(
+      const user = await this.moduleOptions.authService.getValidUserOrFail(
         request.username,
       );
 
@@ -113,16 +113,18 @@ export class AuthController {
     }
 
     try {
-      const token = await this.moduleOptions.authService.checkToken(
+      const token = await this.moduleOptions.authService.getValidTokenOrFail(
         tokenId,
         TokenType.PasswordlessLoginToken,
         requestId,
       );
-      const user = await this.moduleOptions.authService.getUser(
+      const user = await this.moduleOptions.authService.getUserOrFail(
         token.getUserId(),
       );
 
-      await this.moduleOptions.authService.checkUser(user.getUsername());
+      await this.moduleOptions.authService.getValidUserOrFail(
+        user.getUsername(),
+      );
       await this.moduleOptions.authService.removeToken(tokenId);
 
       const login = await this.loginProcessor.process(user, response);
@@ -150,7 +152,7 @@ export class AuthController {
     }
 
     try {
-      const user = await this.moduleOptions.authService.checkUser(
+      const user = await this.moduleOptions.authService.getValidUserOrFail(
         request.username,
       );
 
@@ -173,16 +175,18 @@ export class AuthController {
           request.cookies[TokenType.RefreshToken],
         );
 
-      await this.moduleOptions.authService.checkToken(
+      await this.moduleOptions.authService.getValidTokenOrFail(
         refreshTokenJwtPayload.id,
         TokenType.RefreshToken,
       );
 
-      const user = await this.moduleOptions.authService.getUser(
+      const user = await this.moduleOptions.authService.getUserOrFail(
         refreshTokenJwtPayload.sub,
       );
 
-      await this.moduleOptions.authService.checkUser(user.getUsername());
+      await this.moduleOptions.authService.getValidUserOrFail(
+        user.getUsername(),
+      );
       await this.moduleOptions.authService.removeToken(
         refreshTokenJwtPayload.id,
       );

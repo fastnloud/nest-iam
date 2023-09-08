@@ -18,15 +18,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthService implements IAuthService {
-  // fetch and check token or throw exception
-  public async checkToken(id: string, type: string): Promise<IToken> {}
-  // fetch and check user or throw exception
-  public async checkUser(username: string): Promise<IUser> {}
-  // fetch user or throw exception
-  public async getUser(id: string): Promise<IUser> {}
-  // remove token
+  public async getValidTokenOrFail(id: string, type: string): Promise<IToken> {}
+  public async getValidUserOrFail(username: string): Promise<IUser> {}
+  public async getUserOrFail(id: string): Promise<IUser> {}
   public async removeToken(id: string): Promise<void> {}
-  // save token
   public async saveToken(userId: string, token: IToken): Promise<void> {}
 }
 ```
