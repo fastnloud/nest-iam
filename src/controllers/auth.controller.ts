@@ -22,6 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { CookieName } from 'src/enums/cookie-name.enum';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
@@ -106,7 +107,7 @@ export class AuthController {
       throw new NotFoundException();
     }
 
-    const requestId = request.cookies[TokenType.PasswordlessLoginToken];
+    const requestId = request.cookies[CookieName.PasswordlessLoginToken];
 
     if (!requestId) {
       throw new UnauthorizedException();
@@ -172,7 +173,7 @@ export class AuthController {
     try {
       const refreshTokenJwtPayload: IRefreshTokenJwtPayload =
         await this.jwtService.verifyAsync(
-          request.cookies[TokenType.RefreshToken],
+          request.cookies[CookieName.RefreshToken],
         );
 
       await this.moduleOptions.authService.getValidTokenOrFail(

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { Response } from 'express';
+import { CookieName } from 'src/enums/cookie-name.enum';
 import iamConfig from '../configs/iam.config';
 import { TokenType } from '../enums/token-type.enum';
 import { AccessTokenGenerator } from '../generators/access-token.generator';
@@ -40,14 +41,14 @@ export class LoginProcessor {
       ),
     );
 
-    response.cookie(TokenType.AccessToken, accessToken.jwt, {
+    response.cookie(CookieName.AccessToken, accessToken.jwt, {
       secure: this.config.cookie.secure,
       httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,
       expires: accessToken.expiresAt,
     });
 
-    response.cookie(TokenType.RefreshToken, refreshToken.jwt, {
+    response.cookie(CookieName.RefreshToken, refreshToken.jwt, {
       secure: this.config.cookie.secure,
       httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,

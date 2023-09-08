@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
+import { CookieName } from 'src/enums/cookie-name.enum';
 import { IRefreshTokenJwtPayload } from 'src/interfaces/refresh-token-jwt-payload.interface';
 import iamConfig from '../configs/iam.config';
-import { TokenType } from '../enums/token-type.enum';
 import { MODULE_OPTIONS_TOKEN } from '../iam.module-definition';
 import { IModuleOptions } from '../interfaces/module-options.interface';
 
@@ -22,7 +22,7 @@ export class LogoutProcessor {
     try {
       const refreshTokenJwtPayload: IRefreshTokenJwtPayload =
         await this.jwtService.verifyAsync(
-          request.cookies[TokenType.RefreshToken],
+          request.cookies[CookieName.RefreshToken],
         );
 
       await this.moduleOptions.authService.removeToken(
@@ -30,8 +30,8 @@ export class LogoutProcessor {
       );
     } catch {}
 
-    response.clearCookie(TokenType.AccessToken);
-    response.clearCookie(TokenType.RefreshToken, {
+    response.clearCookie(CookieName.AccessToken);
+    response.clearCookie(CookieName.RefreshToken, {
       path: `${this.config.routePathPrefix}/auth`,
     });
   }

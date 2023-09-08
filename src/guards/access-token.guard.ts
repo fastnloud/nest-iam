@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { CookieName } from 'src/enums/cookie-name.enum';
 import { IAM_REQUEST_USER_KEY } from '../constants/iam.constants';
-import { TokenType } from '../enums/token-type.enum';
 import { IAccessTokenJwtPayload } from '../interfaces/access-token-jwt-payload.interface';
 import { IActiveUser } from '../interfaces/active-user.interface';
 
@@ -20,7 +20,7 @@ export class AccessTokenGuard implements CanActivate {
     try {
       const accessTokenJwtPayload: IAccessTokenJwtPayload =
         await this.jwtService.verifyAsync(
-          request.cookies[TokenType.AccessToken] ?? '',
+          request.cookies[CookieName.AccessToken] ?? '',
         );
 
       const activeUser: IActiveUser = {
