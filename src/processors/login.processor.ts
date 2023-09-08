@@ -56,6 +56,21 @@ export class LoginProcessor {
       path: `${this.config.routePathPrefix}/auth`,
     });
 
+    response.cookie(
+      CookieName.ActiveUser,
+      {
+        id: user.getId(),
+        email: user.getUsername(),
+        roles: user.getRoles(),
+      },
+      {
+        secure: this.config.cookie.secure,
+        httpOnly: false,
+        sameSite: this.config.cookie.sameSite,
+        expires: refreshToken.expiresAt,
+      },
+    );
+
     return login;
   }
 }
