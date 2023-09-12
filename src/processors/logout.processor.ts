@@ -25,7 +25,7 @@ export class LogoutProcessor {
           request.cookies[CookieName.RefreshToken],
         );
 
-      await this.moduleOptions.authService.removeToken(
+      await this.moduleOptions.authService.removeTokenOrFail(
         refreshTokenJwtPayload.id,
       );
     } catch {}

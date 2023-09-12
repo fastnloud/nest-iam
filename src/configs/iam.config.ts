@@ -11,7 +11,6 @@ export default registerAs('iam', () => {
       },
     },
     cookie: {
-      httpOnly: process.env.IAM_COOKIE_HTTP_ONLY,
       sameSite: process.env.IAM_COOKIE_SAME_SITE,
       secure: process.env.IAM_COOKIE_SECURE,
     },
@@ -43,9 +42,6 @@ export default registerAs('iam', () => {
       }),
     }),
     cookie: Joi.object({
-      httpOnly: Joi.valid('1', '0').required().messages({
-        '*': 'Environment variable IAM_COOKIE_HTTP_ONLY is required (1 or 0)',
-      }),
       sameSite: Joi.valid('lax', 'strict', 'none').required().messages({
         '*': 'Environment variable IAM_COOKIE_SAME_SITE is required (lax, strict or none)',
       }),
@@ -96,7 +92,6 @@ export default registerAs('iam', () => {
       refreshTokenTtl: parseInt(config.jwt.refreshTokenTtl, 10),
     },
     cookie: {
-      httpOnly: config.cookie.httpOnly === '1',
       sameSite: config.cookie.sameSite as 'lax' | 'strict' | 'none',
       secure: config.cookie.secure === '1',
     },

@@ -24,13 +24,15 @@ export class PasswordlessLoginRequestProcessor {
     const passwordlessLoginToken =
       await this.passwordlessLoginTokenGenerator.generate(user, requestId);
 
-    await this.moduleOptions.authService.saveToken(passwordlessLoginToken);
+    await this.moduleOptions.authService.saveTokenOrFail(
+      passwordlessLoginToken,
+    );
 
     response.cookie(CookieName.PasswordlessLoginToken, requestId, {
       secure: this.config.cookie.secure,
-      httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,
       expires: passwordlessLoginToken.getExpiresAt(),
+      httpOnly: true,
       path: `${this.config.routePathPrefix}/auth`,
     });
   }

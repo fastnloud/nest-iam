@@ -72,7 +72,7 @@ export class AuthController {
     }
 
     try {
-      const user = await this.moduleOptions.authService.getValidUserOrFail(
+      const user = await this.moduleOptions.authService.findOneValidUserOrFail(
         request.username,
       );
 
@@ -114,19 +114,20 @@ export class AuthController {
     }
 
     try {
-      const token = await this.moduleOptions.authService.getValidTokenOrFail(
-        tokenId,
-        TokenType.PasswordlessLoginToken,
-        requestId,
-      );
-      const user = await this.moduleOptions.authService.getUserOrFail(
+      const token =
+        await this.moduleOptions.authService.findOneValidTokenOrFail(
+          tokenId,
+          TokenType.PasswordlessLoginToken,
+          requestId,
+        );
+      const user = await this.moduleOptions.authService.findOneUserOrFail(
         token.getUserId(),
       );
 
-      await this.moduleOptions.authService.getValidUserOrFail(
+      await this.moduleOptions.authService.findOneValidUserOrFail(
         user.getUsername(),
       );
-      await this.moduleOptions.authService.removeToken(tokenId);
+      await this.moduleOptions.authService.removeTokenOrFail(tokenId);
 
       const login = await this.loginProcessor.process(user, response);
 
@@ -153,7 +154,7 @@ export class AuthController {
     }
 
     try {
-      const user = await this.moduleOptions.authService.getValidUserOrFail(
+      const user = await this.moduleOptions.authService.findOneValidUserOrFail(
         request.username,
       );
 
@@ -176,19 +177,19 @@ export class AuthController {
           request.cookies[CookieName.RefreshToken],
         );
 
-      await this.moduleOptions.authService.getValidTokenOrFail(
+      await this.moduleOptions.authService.findOneValidTokenOrFail(
         refreshTokenJwtPayload.id,
         TokenType.RefreshToken,
       );
 
-      const user = await this.moduleOptions.authService.getUserOrFail(
+      const user = await this.moduleOptions.authService.findOneUserOrFail(
         refreshTokenJwtPayload.sub,
       );
 
-      await this.moduleOptions.authService.getValidUserOrFail(
+      await this.moduleOptions.authService.findOneValidUserOrFail(
         user.getUsername(),
       );
-      await this.moduleOptions.authService.removeToken(
+      await this.moduleOptions.authService.removeTokenOrFail(
         refreshTokenJwtPayload.id,
       );
 

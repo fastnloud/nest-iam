@@ -32,7 +32,7 @@ export class LoginProcessor {
       refreshToken: refreshToken.jwt,
     };
 
-    await this.moduleOptions.authService.saveToken(
+    await this.moduleOptions.authService.saveTokenOrFail(
       new TokenModel(
         refreshToken.id,
         TokenType.RefreshToken,
@@ -43,29 +43,28 @@ export class LoginProcessor {
 
     response.cookie(CookieName.AccessToken, accessToken.jwt, {
       secure: this.config.cookie.secure,
-      httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,
       expires: accessToken.expiresAt,
+      httpOnly: true,
     });
 
     response.cookie(CookieName.RefreshToken, refreshToken.jwt, {
       secure: this.config.cookie.secure,
-      httpOnly: this.config.cookie.httpOnly,
       sameSite: this.config.cookie.sameSite,
       expires: refreshToken.expiresAt,
+      httpOnly: true,
       path: `${this.config.routePathPrefix}/auth`,
     });
 
     response.cookie(
       CookieName.ActiveUser,
-      {
+      JSON.stringify({
         id: user.getId(),
         email: user.getUsername(),
         roles: user.getRoles(),
-      },
+      }),
       {
         secure: this.config.cookie.secure,
-        httpOnly: false,
         sameSite: this.config.cookie.sameSite,
         expires: refreshToken.expiresAt,
       },

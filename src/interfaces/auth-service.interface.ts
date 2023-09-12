@@ -2,13 +2,13 @@ import { IToken } from './token.interface';
 import { IUser } from './user.interface';
 
 export interface IAuthService {
-  getUserOrFail(id: string): Promise<IUser>;
-  getValidTokenOrFail(
+  findOneUserOrFail(id: string): Promise<IUser>;
+  findOneValidTokenOrFail(
     id: string,
     type: string,
     requestId?: string,
   ): Promise<IToken>;
-  getValidUserOrFail(username: string): Promise<IUser>;
-  removeToken(id: string): Promise<void>;
-  saveToken(token: IToken): Promise<void>;
+  findOneValidUserOrFail(username: string): Promise<IUser>;
+  removeTokenOrFail(id: string): Promise<void>;
+  saveTokenOrFail(token: IToken): Promise<void>;
 }
