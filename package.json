@@ -1,6 +1,6 @@
 {
   "name": "@fastnloud/nest-iam",
-  "version": "2.0.0-2",
+  "version": "2.0.0-3",
   "description": "Identity access management module for Nest that provides a simple customizable authentication service interface.",
   "homepage": "https://github.com/fastnloud/nest-iam#readme",
   "main": "dist/index.js",
