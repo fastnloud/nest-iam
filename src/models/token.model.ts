@@ -12,15 +12,19 @@ export class TokenModel implements IToken {
   public getId(): string {
     return this.id;
   }
+
   public getRequestId(): string | undefined {
     return this.requestId;
   }
+
   public getUserId(): string {
     return this.userId;
   }
+
   public getType(): string {
     return this.type;
   }
+
   public getExpiresAt(): Date {
     return this.expiresAt;
   }
