@@ -2,6 +2,7 @@ export * from './decorators/active-user.decorator';
 export * from './decorators/auth.decorator';
 export * from './decorators/roles.decorator';
 export * from './enums/auth-type.enum';
+export * from './enums/cookie-name.enum';
 export * from './enums/token-type.enum';
 export * from './events/logged-in.event';
 export * from './events/logged-out.event';
