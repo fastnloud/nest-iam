@@ -22,7 +22,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { CookieName } from 'src/enums/cookie-name.enum';
 import iamConfig from '../configs/iam.config';
 import { ActiveUser } from '../decorators/active-user.decorator';
 import { Auth } from '../decorators/auth.decorator';
@@ -30,6 +29,7 @@ import { LoginRequestDto } from '../dtos/login-request.dto';
 import { LoginResponseDto } from '../dtos/login-response.dto';
 import { PasswordlessLoginRequestRequestDto } from '../dtos/passwordless-login-request-request.dto';
 import { AuthType } from '../enums/auth-type.enum';
+import { CookieName } from '../enums/cookie-name.enum';
 import { TokenType } from '../enums/token-type.enum';
 import { LoggedInEvent } from '../events/logged-in.event';
 import { LoggedOutEvent } from '../events/logged-out.event';

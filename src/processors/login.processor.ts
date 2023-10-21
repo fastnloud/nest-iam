@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { Response } from 'express';
-import { CookieName } from 'src/enums/cookie-name.enum';
 import iamConfig from '../configs/iam.config';
+import { CookieName } from '../enums/cookie-name.enum';
 import { TokenType } from '../enums/token-type.enum';
 import { AccessTokenGenerator } from '../generators/access-token.generator';
 import { RefreshTokenGenerator } from '../generators/refresh-token.generator';
