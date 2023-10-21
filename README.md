@@ -59,6 +59,7 @@ import { AuthService } from './services/auth.service';
     }),
   ],
   exports: [AuthService],
+  providers: [AuthService],
 })
 export class UserModule {}
 ```
