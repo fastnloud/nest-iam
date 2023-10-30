@@ -34,5 +34,6 @@ export class LogoutProcessor {
     response.clearCookie(CookieName.RefreshToken, {
       path: `${this.config.routePathPrefix}/auth`,
     });
+    response.clearCookie(CookieName.ActiveUser);
   }
 }
