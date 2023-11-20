@@ -159,7 +159,9 @@ export class AuthController {
       );
 
       await this.passwordlessLoginRequestProcessor.process(user, response);
-    } catch {}
+    } catch {
+      throw new NotFoundException();
+    }
   }
 
   @HttpCode(HttpStatus.OK)
