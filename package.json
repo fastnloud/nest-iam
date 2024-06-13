@@ -15,11 +15,11 @@
     "preversion": "npm run build"
   },
   "bin": {
-    "hash-password": "./dist/prompts/hash-password.prompt.js"
+    "hash-password": "dist/prompts/hash-password.prompt.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fastnloud/nest-iam.git"
+    "url": "git+https://github.com/fastnloud/nest-iam.git"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
