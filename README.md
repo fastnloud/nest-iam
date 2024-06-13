@@ -87,7 +87,7 @@ secure flag on the cookie. This will allow you to use the cookie over HTTP
 instead of HTTPS.
 
 The `IAM_ROUTE_PATH_PREFIX` environment variable is optional and will be left
-empty if not set. Whenver this module is served from another path this value
+empty if not set. Whenever this module is served from another path this value
 should be updated accordingly.
 
 ## Example
