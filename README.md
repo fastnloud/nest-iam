@@ -253,6 +253,9 @@ import { Controller } from '@nestjs/common';
 export class MyController {}
 ```
 
+Alternatively, you can use the `publicRoutes` configuration option to set
+specific routes to be public.
+
 Roles (if implemented) can be applied similarly by using the `Roles` decorator:
 
 ```ts
