@@ -28,8 +28,11 @@ export class LoginProcessor {
     request: Request,
     response: Response,
   ): Promise<ILogin> {
-    const accessToken = await this.accessTokenGenerator.generate(user);
-    const refreshToken = await this.refreshTokenGenerator.generate(user);
+    const accessToken = await this.accessTokenGenerator.generate(user, request);
+    const refreshToken = await this.refreshTokenGenerator.generate(
+      user,
+      request,
+    );
 
     const login = {
       accessToken: accessToken.jwt,

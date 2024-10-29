@@ -16,8 +16,6 @@ export default registerAs('iam', () => {
     },
     jwt: {
       accessTokenTtl: process.env.IAM_JWT_ACCESS_TOKEN_TTL,
-      audience: process.env.IAM_JWT_TOKEN_AUDIENCE,
-      issuer: process.env.IAM_JWT_TOKEN_ISSUER,
       refreshTokenTtl: process.env.IAM_JWT_REFRESH_TOKEN_TTL,
       secret: process.env.IAM_JWT_SECRET,
     },
@@ -52,12 +50,6 @@ export default registerAs('iam', () => {
     jwt: Joi.object({
       accessTokenTtl: Joi.number().positive().required().messages({
         '*': 'Environment variable IAM_JWT_ACCESS_TOKEN_TTL is required (e.g. 3600 for 1 hour)',
-      }),
-      audience: Joi.string().required().messages({
-        '*': 'Environment variable IAM_JWT_TOKEN_AUDIENCE is required (e.g. localhost)',
-      }),
-      issuer: Joi.string().required().messages({
-        '*': 'Environment variable IAM_JWT_TOKEN_ISSUER is required (e.g. localhost)',
       }),
       refreshTokenTtl: Joi.number().positive().required().messages({
         '*': 'Environment variable IAM_JWT_REFRESH_TOKEN_TTL is required (e.g. 86400 for 1 day)',
