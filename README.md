@@ -47,8 +47,7 @@ import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [
-    CqrsModule,
-    IamModule.registerAsync({
+    IamModule.forRootAsync({
       imports: [UserModule],
       useFactory: (authService: IAuthService) => {
         return {
@@ -61,7 +60,7 @@ import { AuthService } from './services/auth.service';
   exports: [AuthService],
   providers: [AuthService],
 })
-export class UserModule {}
+export class AppModule {}
 ```
 
 ## Configuration

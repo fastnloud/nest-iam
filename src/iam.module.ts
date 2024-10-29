@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -18,6 +18,7 @@ import { LoginProcessor } from './processors/login.processor';
 import { LogoutProcessor } from './processors/logout.processor';
 import { PasswordlessLoginRequestProcessor } from './processors/passwordless-login-request.processor';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forFeature(iamConfig),
