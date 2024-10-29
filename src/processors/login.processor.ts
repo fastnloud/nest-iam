@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { CookieName } from '../enums/cookie-name.enum';
 import { TokenType } from '../enums/token-type.enum';
@@ -23,7 +23,11 @@ export class LoginProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(user: IUser, response: Response): Promise<ILogin> {
+  public async process(
+    user: IUser,
+    request: Request,
+    response: Response,
+  ): Promise<ILogin> {
     const accessToken = await this.accessTokenGenerator.generate(user);
     const refreshToken = await this.refreshTokenGenerator.generate(user);
 
@@ -39,6 +43,7 @@ export class LoginProcessor {
         user.getId(),
         refreshToken.expiresAt,
       ),
+      { request },
     );
 
     response.cookie(CookieName.AccessToken, accessToken.jwt, {
