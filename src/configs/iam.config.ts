@@ -3,7 +3,6 @@ import * as Joi from 'joi';
 
 export default registerAs('iam', () => {
   const config = {
-    routePathPrefix: process.env.IAM_ROUTE_PATH_PREFIX || '',
     auth: {
       methods: (process.env.IAM_AUTH_METHODS || '').split(','),
       passwordless: {
@@ -57,9 +56,6 @@ export default registerAs('iam', () => {
       secret: Joi.string().required().messages({
         '*': 'Environment variable IAM_JWT_SECRET is required (e.g. superSecretString)',
       }),
-    }),
-    routePathPrefix: Joi.string().allow('').optional().messages({
-      '*': 'Environment variable IAM_ROUTE_PATH_PREFIX must be a string (e.g. /api)',
     }),
   }).validate(config, { abortEarly: false });
 

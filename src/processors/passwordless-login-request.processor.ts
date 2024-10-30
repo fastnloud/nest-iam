@@ -38,7 +38,7 @@ export class PasswordlessLoginRequestProcessor {
       sameSite: this.config.cookie.sameSite,
       expires: passwordlessLoginToken.getExpiresAt(),
       httpOnly: true,
-      path: `${this.config.routePathPrefix}/auth`,
+      path: `${this.moduleOptions?.routePathPrefix ?? ''}/auth`,
     });
   }
 }

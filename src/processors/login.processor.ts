@@ -61,7 +61,7 @@ export class LoginProcessor {
       sameSite: this.config.cookie.sameSite,
       expires: refreshToken.expiresAt,
       httpOnly: true,
-      path: `${this.config.routePathPrefix}/auth`,
+      path: `${this.moduleOptions?.routePathPrefix ?? ''}/auth`,
     });
 
     response.cookie(
