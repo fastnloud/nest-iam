@@ -27,10 +27,6 @@ import { PasswordlessLoginRequestProcessor } from './processors/passwordless-log
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
         secret: config.get('iam.jwt.secret'),
-        signOptions: {
-          audience: config.get('iam.jwt.audience'),
-          issuer: config.get('iam.jwt.issuer'),
-        },
       }),
       inject: [ConfigService],
     }),
