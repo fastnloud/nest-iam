@@ -69,16 +69,25 @@ Add the following environment variables to your `.env` file and change the
 values to your needs:
 
 ```
+# defaults to: basic
 IAM_AUTH_METHODS=basic,passwordless
-IAM_AUTH_PASSWORDLESS_TOKEN_TTL=300
+# defaults to: 300
+IAM_AUTH_PASSWORDLESS_TOKEN_TTL=150
+# defaults to: strict
 IAM_COOKIE_SAME_SITE=lax
-IAM_COOKIE_SECURE=1
+# defaults to: 1
+IAM_COOKIE_SECURE=0
+# defaults to: 600
 IAM_JWT_ACCESS_TOKEN_TTL=3600
+# defaults to: 604800
 IAM_JWT_REFRESH_TOKEN_TTL=86400
 IAM_JWT_SECRET=superSecretString
-IAM_JWT_TOKEN_AUDIENCE=localhost
-IAM_JWT_TOKEN_ISSUER=localhost
-IAM_ROUTE_PATH_PREFIX=
+```
+
+Minimal configuration:
+
+```
+IAM_JWT_SECRET=superSecretString
 ```
 
 When in local development, you can set `IAM_COOKIE_SECURE` to `0` to disable the

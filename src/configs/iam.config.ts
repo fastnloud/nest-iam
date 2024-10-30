@@ -4,18 +4,18 @@ import * as Joi from 'joi';
 export default registerAs('iam', () => {
   const config = {
     auth: {
-      methods: (process.env.IAM_AUTH_METHODS || '').split(','),
+      methods: (process.env.IAM_AUTH_METHODS || 'basic').split(','),
       passwordless: {
-        tokenTtl: process.env.IAM_AUTH_PASSWORDLESS_TOKEN_TTL,
+        tokenTtl: process.env.IAM_AUTH_PASSWORDLESS_TOKEN_TTL || '300',
       },
     },
     cookie: {
-      sameSite: process.env.IAM_COOKIE_SAME_SITE,
-      secure: process.env.IAM_COOKIE_SECURE,
+      sameSite: process.env.IAM_COOKIE_SAME_SITE || 'strict',
+      secure: process.env.IAM_COOKIE_SECURE || '1',
     },
     jwt: {
-      accessTokenTtl: process.env.IAM_JWT_ACCESS_TOKEN_TTL,
-      refreshTokenTtl: process.env.IAM_JWT_REFRESH_TOKEN_TTL,
+      accessTokenTtl: process.env.IAM_JWT_ACCESS_TOKEN_TTL || '600',
+      refreshTokenTtl: process.env.IAM_JWT_REFRESH_TOKEN_TTL || '604800',
       secret: process.env.IAM_JWT_SECRET,
     },
   };
