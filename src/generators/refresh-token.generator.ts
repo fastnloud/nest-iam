@@ -33,9 +33,9 @@ export class RefreshTokenGenerator {
           roles: user.getRoles(),
         } as IRefreshTokenJwtPayload,
         {
-          audience: request.hostname,
-          issuer: request.hostname,
           expiresIn: this.config.jwt.refreshTokenTtl,
+          audience: `${request.protocol}://${request.hostname}`,
+          issuer: `${request.protocol}://${request.hostname}`,
         },
       ),
       expiresAt,

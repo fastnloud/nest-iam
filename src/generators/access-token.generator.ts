@@ -29,9 +29,9 @@ export class AccessTokenGenerator {
           roles: user.getRoles(),
         } as IAccessTokenJwtPayload,
         {
-          audience: request.hostname,
-          issuer: request.hostname,
           expiresIn: this.config.jwt.accessTokenTtl,
+          audience: `${request.protocol}://${request.hostname}`,
+          issuer: `${request.protocol}://${request.hostname}`,
         },
       ),
       expiresAt,
