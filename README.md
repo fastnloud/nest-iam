@@ -138,16 +138,23 @@ export class AuthService implements IAuthService {
   public async findOneValidTokenOrFail(
     id: string,
     type: string,
-    requestId?: string,
+    context?: string,
   ): Promise<IToken> {
+    const requestId = context?.request?.cookies[CookieName.PasswordlessLoginToken];
     const token = await this.userTokenRepository.findOneOrFail({
       where: {
         id,
         type,
-        requestId,
+        requestId: context?.request?.cookies[CookieName.PasswordlessLoginToken],
         expiresAt: MoreThan(new Date()),
       },
     });
+
+    if (requestId) {
+      queryBuilder.andWhere({
+        requestId,
+      });
+    }
 
     return token;
   }

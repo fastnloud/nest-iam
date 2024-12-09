@@ -27,6 +27,7 @@ export class LogoutProcessor {
 
       await this.moduleOptions.authService.removeTokenOrFail(
         refreshTokenJwtPayload.id,
+        { request },
       );
     } catch {}
 
