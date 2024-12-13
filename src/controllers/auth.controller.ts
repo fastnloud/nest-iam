@@ -135,6 +135,8 @@ export class AuthController {
 
       const login = await this.loginProcessor.process(user, request, response);
 
+      this.eventBus.publish(new LoggedInEvent(user.getId(), { request }));
+
       return {
         accessToken: login.accessToken,
         refreshToken: login.refreshToken,
