@@ -104,7 +104,7 @@ This is an example of a service that implements the `IAuthService` interface
 using TypeORM:
 
 ```ts
-import { IAuthService, IToken, IUser, TokenType } from '@fastnloud/nest-iam';
+import { CookieName, IAuthService, IToken, IUser, TokenType } from '@fastnloud/nest-iam';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
@@ -140,21 +140,17 @@ export class AuthService implements IAuthService {
     type: string,
     context?: string,
   ): Promise<IToken> {
-    const requestId = context?.request?.cookies[CookieName.PasswordlessLoginToken];
-    const token = await this.userTokenRepository.findOneOrFail({
-      where: {
-        id,
-        type,
-        requestId: context?.request?.cookies[CookieName.PasswordlessLoginToken],
-        expiresAt: MoreThan(new Date()),
-      },
-    });
-
-    if (requestId) {
-      queryBuilder.andWhere({
-        requestId,
-      });
+    const where = {
+      id,
+      type,
+      expiresAt: MoreThan(new Date()),
+    };
+    
+    if (type === TokenType.PasswordlessLoginToken) {
+      where.requestId = context?.request?.cookies[CookieName.PasswordlessLoginToken];
     }
+    
+    const token = await this.userTokenRepository.findOneOrFail({ where });
 
     return token;
   }
