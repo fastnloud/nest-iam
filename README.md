@@ -150,9 +150,7 @@ export class AuthService implements IAuthService {
       where.requestId = context?.request?.cookies[CookieName.PasswordlessLoginToken];
     }
     
-    const token = await this.userTokenRepository.findOneOrFail({ where });
-
-    return token;
+    return await this.userTokenRepository.findOneOrFail({ where });
   }
 
   /*
@@ -184,13 +182,11 @@ export class AuthService implements IAuthService {
    * This method should throw an error if the user does not exist.
    */
   public async findOneUserOrFail(id: string): Promise<IUser> {
-    const user = await this.userRepository.findOneOrFail({
+    return await this.userRepository.findOneOrFail({
       where: {
         id: +id,
       },
     });
-
-    return user;
   }
 
   /*
