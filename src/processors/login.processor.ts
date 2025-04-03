@@ -70,7 +70,12 @@ export class LoginProcessor {
         id: user.getId(),
         email: user.getUsername(),
         roles: user.getRoles(),
-        expiresAt: refreshToken.expiresAt,
+        accessToken: {
+          expiresAt: accessToken.expiresAt,
+        },
+        refreshToken: {
+          expiresAt: refreshToken.expiresAt,
+        },
       }),
       {
         secure: this.config.cookie.secure,
