@@ -52,7 +52,12 @@ import { PasswordlessLoginRequestProcessor } from './processors/passwordless-log
       useClass: RolesGuard,
     },
   ],
-  exports: [BcryptHasher, LoginProcessor],
+  exports: [
+    BcryptHasher,
+    LoginProcessor,
+    LogoutProcessor,
+    PasswordlessLoginRequestProcessor,
+  ],
   controllers: [AuthController],
 })
 export class IamModule extends ConfigurableModuleClass {}
