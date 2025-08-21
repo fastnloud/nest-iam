@@ -160,7 +160,12 @@ export class AuthController {
 
       await this.passwordlessLoginRequestProcessor.process(user, response);
     } catch {
-      throw new NotFoundException();
+      if (
+        this.moduleOptions?.passwordlessLoginOptions?.throwNotFoundError ??
+        true
+      ) {
+        throw new NotFoundException();
+      }
     }
   }
 
