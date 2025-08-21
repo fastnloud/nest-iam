@@ -5,4 +5,7 @@ export interface IModuleOptions {
   authService: IAuthService;
   routePathPrefix?: string;
   publicRoutes?: IPublicRoute[];
+  passwordlessLoginOptions?: {
+    throwNotFoundError?: boolean;
+  };
 }

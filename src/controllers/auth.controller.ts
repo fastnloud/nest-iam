@@ -172,7 +172,12 @@ export class AuthController {
         response,
       );
     } catch {
-      throw new NotFoundException();
+      if (
+        this.moduleOptions?.passwordlessLoginOptions?.throwNotFoundError ??
+        true
+      ) {
+        throw new NotFoundException();
+      }
     }
   }
 
