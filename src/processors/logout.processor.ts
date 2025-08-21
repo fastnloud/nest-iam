@@ -27,12 +27,13 @@ export class LogoutProcessor {
 
       await this.moduleOptions.authService.removeTokenOrFail(
         refreshTokenJwtPayload.id,
+        { request },
       );
     } catch {}
 
     response.clearCookie(CookieName.AccessToken);
     response.clearCookie(CookieName.RefreshToken, {
-      path: `${this.config.routePathPrefix}/auth`,
+      path: `${this.moduleOptions?.routePathPrefix ?? ''}/auth`,
     });
     response.clearCookie(CookieName.ActiveUser);
   }

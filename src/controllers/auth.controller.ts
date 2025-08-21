@@ -64,7 +64,8 @@ export class AuthController {
   @Auth(AuthType.None)
   @Post('/auth/login')
   async login(
-    @Body() request: LoginRequestDto,
+    @Body() dto: LoginRequestDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<LoginResponseDto> {
     if (!this.config.auth.methods.includes('basic')) {
@@ -73,16 +74,17 @@ export class AuthController {
 
     try {
       const user = await this.moduleOptions.authService.findOneValidUserOrFail(
-        request.username,
+        dto.username,
+        { request },
       );
 
-      if (!(await this.hasher.compare(request.password, user.getPassword()))) {
+      if (!(await this.hasher.compare(dto.password, user.getPassword()))) {
         throw new UnauthorizedException();
       }
 
-      const login = await this.loginProcessor.process(user, response);
+      const login = await this.loginProcessor.process(user, request, response);
 
-      this.eventBus.publish(new LoggedInEvent(user.getId()));
+      this.eventBus.publish(new LoggedInEvent(user.getId(), { request }));
 
       return {
         accessToken: login.accessToken,
@@ -107,9 +109,7 @@ export class AuthController {
       throw new NotFoundException();
     }
 
-    const requestId = request.cookies[CookieName.PasswordlessLoginToken];
-
-    if (!requestId) {
+    if (!request.cookies[CookieName.PasswordlessLoginToken]) {
       throw new UnauthorizedException();
     }
 
@@ -118,18 +118,24 @@ export class AuthController {
         await this.moduleOptions.authService.findOneValidTokenOrFail(
           tokenId,
           TokenType.PasswordlessLoginToken,
-          requestId,
+          { request },
         );
       const user = await this.moduleOptions.authService.findOneUserOrFail(
         token.getUserId(),
+        { request },
       );
 
       await this.moduleOptions.authService.findOneValidUserOrFail(
         user.getUsername(),
+        { request },
       );
-      await this.moduleOptions.authService.removeTokenOrFail(tokenId);
+      await this.moduleOptions.authService.removeTokenOrFail(tokenId, {
+        request,
+      });
 
-      const login = await this.loginProcessor.process(user, response);
+      const login = await this.loginProcessor.process(user, request, response);
+
+      this.eventBus.publish(new LoggedInEvent(user.getId(), { request }));
 
       return {
         accessToken: login.accessToken,
@@ -146,7 +152,8 @@ export class AuthController {
   @Auth(AuthType.None)
   @Post('/auth/passwordless_login')
   async passwordlessLoginRequest(
-    @Body() request: PasswordlessLoginRequestRequestDto,
+    @Body() dto: PasswordlessLoginRequestRequestDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<void> {
     if (!this.config.auth.methods.includes('passwordless')) {
@@ -155,10 +162,15 @@ export class AuthController {
 
     try {
       const user = await this.moduleOptions.authService.findOneValidUserOrFail(
-        request.username,
+        dto.username,
+        { request },
       );
 
-      await this.passwordlessLoginRequestProcessor.process(user, response);
+      await this.passwordlessLoginRequestProcessor.process(
+        user,
+        request,
+        response,
+      );
     } catch {
       if (
         this.moduleOptions?.passwordlessLoginOptions?.throwNotFoundError ??
@@ -187,20 +199,24 @@ export class AuthController {
       await this.moduleOptions.authService.findOneValidTokenOrFail(
         refreshTokenJwtPayload.id,
         TokenType.RefreshToken,
+        { request },
       );
 
       const user = await this.moduleOptions.authService.findOneUserOrFail(
         refreshTokenJwtPayload.sub,
+        { request },
       );
 
       await this.moduleOptions.authService.findOneValidUserOrFail(
         user.getUsername(),
+        { request },
       );
       await this.moduleOptions.authService.removeTokenOrFail(
         refreshTokenJwtPayload.id,
+        { request },
       );
 
-      const login = await this.loginProcessor.process(user, response);
+      const login = await this.loginProcessor.process(user, request, response);
 
       return {
         accessToken: login.accessToken,
@@ -227,6 +243,6 @@ export class AuthController {
       return;
     }
 
-    this.eventBus.publish(new LoggedOutEvent(activeUser.userId));
+    this.eventBus.publish(new LoggedOutEvent(activeUser.userId, { request }));
   }
 }

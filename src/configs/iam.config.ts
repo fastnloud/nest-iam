@@ -3,22 +3,19 @@ import * as Joi from 'joi';
 
 export default registerAs('iam', () => {
   const config = {
-    routePathPrefix: process.env.IAM_ROUTE_PATH_PREFIX || '',
     auth: {
-      methods: (process.env.IAM_AUTH_METHODS || '').split(','),
+      methods: (process.env.IAM_AUTH_METHODS || 'basic').split(','),
       passwordless: {
-        tokenTtl: process.env.IAM_AUTH_PASSWORDLESS_TOKEN_TTL,
+        tokenTtl: process.env.IAM_AUTH_PASSWORDLESS_TOKEN_TTL || '300',
       },
     },
     cookie: {
-      sameSite: process.env.IAM_COOKIE_SAME_SITE,
-      secure: process.env.IAM_COOKIE_SECURE,
+      sameSite: process.env.IAM_COOKIE_SAME_SITE || 'strict',
+      secure: process.env.IAM_COOKIE_SECURE || '1',
     },
     jwt: {
-      accessTokenTtl: process.env.IAM_JWT_ACCESS_TOKEN_TTL,
-      audience: process.env.IAM_JWT_TOKEN_AUDIENCE,
-      issuer: process.env.IAM_JWT_TOKEN_ISSUER,
-      refreshTokenTtl: process.env.IAM_JWT_REFRESH_TOKEN_TTL,
+      accessTokenTtl: process.env.IAM_JWT_ACCESS_TOKEN_TTL || '600',
+      refreshTokenTtl: process.env.IAM_JWT_REFRESH_TOKEN_TTL || '604800',
       secret: process.env.IAM_JWT_SECRET,
     },
   };
@@ -53,21 +50,12 @@ export default registerAs('iam', () => {
       accessTokenTtl: Joi.number().positive().required().messages({
         '*': 'Environment variable IAM_JWT_ACCESS_TOKEN_TTL is required (e.g. 3600 for 1 hour)',
       }),
-      audience: Joi.string().required().messages({
-        '*': 'Environment variable IAM_JWT_TOKEN_AUDIENCE is required (e.g. localhost)',
-      }),
-      issuer: Joi.string().required().messages({
-        '*': 'Environment variable IAM_JWT_TOKEN_ISSUER is required (e.g. localhost)',
-      }),
       refreshTokenTtl: Joi.number().positive().required().messages({
         '*': 'Environment variable IAM_JWT_REFRESH_TOKEN_TTL is required (e.g. 86400 for 1 day)',
       }),
       secret: Joi.string().required().messages({
         '*': 'Environment variable IAM_JWT_SECRET is required (e.g. superSecretString)',
       }),
-    }),
-    routePathPrefix: Joi.string().allow('').optional().messages({
-      '*': 'Environment variable IAM_ROUTE_PATH_PREFIX must be a string (e.g. /api)',
     }),
   }).validate(config, { abortEarly: false });
 

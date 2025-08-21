@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { CookieName } from '../enums/cookie-name.enum';
 import { TokenType } from '../enums/token-type.enum';
@@ -23,9 +23,16 @@ export class LoginProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(user: IUser, response: Response): Promise<ILogin> {
-    const accessToken = await this.accessTokenGenerator.generate(user);
-    const refreshToken = await this.refreshTokenGenerator.generate(user);
+  public async process(
+    user: IUser,
+    request: Request,
+    response: Response,
+  ): Promise<ILogin> {
+    const accessToken = await this.accessTokenGenerator.generate(user, request);
+    const refreshToken = await this.refreshTokenGenerator.generate(
+      user,
+      request,
+    );
 
     const login = {
       accessToken: accessToken.jwt,
@@ -39,6 +46,7 @@ export class LoginProcessor {
         user.getId(),
         refreshToken.expiresAt,
       ),
+      { request },
     );
 
     response.cookie(CookieName.AccessToken, accessToken.jwt, {
@@ -53,7 +61,7 @@ export class LoginProcessor {
       sameSite: this.config.cookie.sameSite,
       expires: refreshToken.expiresAt,
       httpOnly: true,
-      path: `${this.config.routePathPrefix}/auth`,
+      path: `${this.moduleOptions?.routePathPrefix ?? ''}/auth`,
     });
 
     response.cookie(
@@ -62,6 +70,12 @@ export class LoginProcessor {
         id: user.getId(),
         email: user.getUsername(),
         roles: user.getRoles(),
+        accessToken: {
+          expiresAt: accessToken.expiresAt,
+        },
+        refreshToken: {
+          expiresAt: refreshToken.expiresAt,
+        },
       }),
       {
         secure: this.config.cookie.secure,

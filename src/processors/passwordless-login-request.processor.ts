@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { randomUUID } from 'crypto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import iamConfig from '../configs/iam.config';
 import { CookieName } from '../enums/cookie-name.enum';
 import { PasswordlessLoginTokenGenerator } from '../generators/passwordless-login-token.generator';
@@ -19,13 +19,18 @@ export class PasswordlessLoginRequestProcessor {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  public async process(user: IUser, response: Response): Promise<void> {
+  public async process(
+    user: IUser,
+    request: Request,
+    response: Response,
+  ): Promise<void> {
     const requestId = randomUUID();
     const passwordlessLoginToken =
       await this.passwordlessLoginTokenGenerator.generate(user, requestId);
 
     await this.moduleOptions.authService.saveTokenOrFail(
       passwordlessLoginToken,
+      { request },
     );
 
     response.cookie(CookieName.PasswordlessLoginToken, requestId, {
@@ -33,7 +38,7 @@ export class PasswordlessLoginRequestProcessor {
       sameSite: this.config.cookie.sameSite,
       expires: passwordlessLoginToken.getExpiresAt(),
       httpOnly: true,
-      path: `${this.config.routePathPrefix}/auth`,
+      path: `${this.moduleOptions?.routePathPrefix ?? ''}/auth`,
     });
   }
 }

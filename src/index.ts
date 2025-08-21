@@ -15,3 +15,5 @@ export * from './interfaces/module-options.interface';
 export * from './interfaces/token.interface';
 export * from './interfaces/user.interface';
 export * from './processors/login.processor';
+export * from './processors/logout.processor';
+export * from './processors/passwordless-login-request.processor';

@@ -47,8 +47,7 @@ import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [
-    CqrsModule,
-    IamModule.registerAsync({
+    IamModule.forRootAsync({
       imports: [UserModule],
       useFactory: (authService: IAuthService) => {
         return {
@@ -61,7 +60,7 @@ import { AuthService } from './services/auth.service';
   exports: [AuthService],
   providers: [AuthService],
 })
-export class UserModule {}
+export class AppModule {}
 ```
 
 ## Configuration
@@ -70,16 +69,25 @@ Add the following environment variables to your `.env` file and change the
 values to your needs:
 
 ```
+# defaults to: basic
 IAM_AUTH_METHODS=basic,passwordless
-IAM_AUTH_PASSWORDLESS_TOKEN_TTL=300
+# defaults to: 300
+IAM_AUTH_PASSWORDLESS_TOKEN_TTL=150
+# defaults to: strict
 IAM_COOKIE_SAME_SITE=lax
-IAM_COOKIE_SECURE=1
+# defaults to: 1
+IAM_COOKIE_SECURE=0
+# defaults to: 600
 IAM_JWT_ACCESS_TOKEN_TTL=3600
+# defaults to: 604800
 IAM_JWT_REFRESH_TOKEN_TTL=86400
 IAM_JWT_SECRET=superSecretString
-IAM_JWT_TOKEN_AUDIENCE=localhost
-IAM_JWT_TOKEN_ISSUER=localhost
-IAM_ROUTE_PATH_PREFIX=
+```
+
+Minimal configuration:
+
+```
+IAM_JWT_SECRET=superSecretString
 ```
 
 When in local development, you can set `IAM_COOKIE_SECURE` to `0` to disable the
@@ -96,7 +104,7 @@ This is an example of a service that implements the `IAuthService` interface
 using TypeORM:
 
 ```ts
-import { IAuthService, IToken, IUser, TokenType } from '@fastnloud/nest-iam';
+import { CookieName, IAuthService, IToken, IUser, TokenType } from '@fastnloud/nest-iam';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThan, Repository } from 'typeorm';
@@ -130,18 +138,19 @@ export class AuthService implements IAuthService {
   public async findOneValidTokenOrFail(
     id: string,
     type: string,
-    requestId?: string,
+    context?: string,
   ): Promise<IToken> {
-    const token = await this.userTokenRepository.findOneOrFail({
-      where: {
-        id,
-        type,
-        requestId,
-        expiresAt: MoreThan(new Date()),
-      },
-    });
-
-    return token;
+    const where = {
+      id,
+      type,
+      expiresAt: MoreThan(new Date()),
+    };
+    
+    if (type === TokenType.PasswordlessLoginToken) {
+      where.requestId = context?.request?.cookies[CookieName.PasswordlessLoginToken];
+    }
+    
+    return await this.userTokenRepository.findOneOrFail({ where });
   }
 
   /*
@@ -173,13 +182,11 @@ export class AuthService implements IAuthService {
    * This method should throw an error if the user does not exist.
    */
   public async findOneUserOrFail(id: string): Promise<IUser> {
-    const user = await this.userRepository.findOneOrFail({
+    return await this.userRepository.findOneOrFail({
       where: {
         id: +id,
       },
     });
-
-    return user;
   }
 
   /*

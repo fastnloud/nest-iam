@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 import iamConfig from '../configs/iam.config';
 import { IAccessTokenJwtPayload } from '../interfaces/access-token-jwt-payload.interface';
 import { IAccessToken } from '../interfaces/access-token.interface';
@@ -14,7 +15,7 @@ export class AccessTokenGenerator {
     private readonly config: ConfigType<typeof iamConfig>,
   ) {}
 
-  async generate(user: IUser): Promise<IAccessToken> {
+  async generate(user: IUser, request: Request): Promise<IAccessToken> {
     const ttl = this.config.jwt.accessTokenTtl;
 
     const expiresAt = new Date();
@@ -29,6 +30,8 @@ export class AccessTokenGenerator {
         } as IAccessTokenJwtPayload,
         {
           expiresIn: this.config.jwt.accessTokenTtl,
+          audience: `${request.protocol}://${request.hostname}`,
+          issuer: `${request.protocol}://${request.hostname}`,
         },
       ),
       expiresAt,
