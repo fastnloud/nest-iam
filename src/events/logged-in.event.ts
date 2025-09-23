@@ -1,6 +1,6 @@
 export class LoggedInEvent {
   constructor(
     public readonly userId: string,
-    context?: Record<string, any>,
+    public readonly context?: Record<string, any>,
   ) {}
 }
