@@ -22,7 +22,7 @@
     "url": "git+https://github.com/fastnloud/nest-iam.git"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "class-validator": "^0.14.1",
     "joi": "^17.13.3",
     "prompts": "^2.4.2"
